@@ -11,6 +11,7 @@ export default function Navbar (){
                 <Link href="/opportunities">Opportunities</Link>
                 <Link href="/dashboard">Dashboard</Link>
                 <Link href="/login">Login</Link>
+                <Link href="/register">Register</Link>
             </div>
         </nav>
     );
