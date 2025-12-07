@@ -10,8 +10,12 @@ export default function OrgDashboard() {
   const [events, setEvents] = useState([]);
   const [requests, setRequests] = useState([]);
 
+  
+
   const fetchData = async () => {
     const token = localStorage.getItem("token");
+    console.log("token", token);
+    
 
     if (!token) {
       router.push("/login");
@@ -21,6 +25,7 @@ export default function OrgDashboard() {
     // Fetch organizer events
     const eventRes = await getMyEvents(token);
     setEvents(eventRes.events || []);
+    
 
     // Fetch all volunteer requests for this organizer
     const reqRes = await getOrganizerRequests();
@@ -63,9 +68,15 @@ export default function OrgDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-6">
             {events.map((event: any) => (
-              <div key={event._id} className="p-4 border rounded shadow">
+              <div 
+                key={event._id} 
+                className="p-4 border rounded shadow cursor-pointer"
+                onClick={() => router.push(`/organizer/event/${event._id}`)}
+              >
                 <h3 className="text-xl font-bold">{event.title}</h3>
                 <p className="text-gray-600">{event.description}</p>
+                <p className="text-gray-600">{event.location}</p>
+                <p className="text-gray-600">{event.date}</p>
 
                 <div className="mt-4 flex gap-4">
                   <Link
@@ -75,66 +86,6 @@ export default function OrgDashboard() {
                     Edit
                   </Link>
                   <button className="text-red-600 underline">Delete</button>
-                </div>
-
-                {/* Pending Requests Section */}
-                <div className="mt-6">
-                  <h4 className="font-semibold text-lg mb-2">Volunteer Requests</h4>
-
-                  {requests.filter((r: any) => r.eventId._id === event._id).length === 0 ? (
-                    <p className="text-gray-500 text-sm">No requests yet.</p>
-                  ) : (
-                    requests
-                      .filter((r: any) => r.eventId._id === event._id)
-                      .map((req: any) => (
-                        <div
-                          key={req._id}
-                          className="border p-3 rounded mt-2 flex justify-between"
-                        >
-                          <span>
-                            {req.userId?.name || "Unknown User"}
-                          </span>
-
-                          {req.status === "requested" && (
-                            <div className="flex gap-3">
-                              <button
-                                onClick={() => handleAccept(req._id)}
-                                className="bg-green-600 text-white px-3 py-1 rounded"
-                              >
-                                Accept
-                              </button>
-
-                              <button
-                                onClick={() => handleReject(req._id)}
-                                className="bg-red-600 text-white px-3 py-1 rounded"
-                              >
-                                Reject
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      ))
-                  )}
-                </div>
-                {/* Volunteers List */}
-                <div className="mt-6">
-                  <h4 className="font-semibold text-lg mb-2">Joined Volunteers</h4>
-
-                  {event.joinedVolunteers?.length === 0 ? (
-                      <p className="text-gray-500 text-sm">No volunteers joined yet.</p>
-                  ) : (
-                      <ul className="mt-2 space-y-2">
-                          {event.joinedVolunteers.map((v: any) => (
-                              <li
-                                  key={v._id}
-                                  className="p-2 border rounded flex justify-between"
-                              >
-                                  <span className="font-medium">{v.name || "Unknown User"}</span>
-                                  <span className="text-sm text-gray-500">{v.email}</span>
-                              </li>
-                          ))}
-                      </ul>
-                  )}
                 </div>
               </div>
             ))}

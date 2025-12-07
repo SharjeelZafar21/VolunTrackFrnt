@@ -211,6 +211,57 @@ export const rejectRequest = async (requestId: String)=>{
     }
 }
 
+//Completed event
+export const completeEvent = async (eventId: String, userId: String, impactScore: Number)=>{
+    const token = localStorage.getItem("token");
+
+    if(!token) return { redirect: true};
+
+    try{
+        const res = await fetch(`${API_BASE_URL}/events/event/complete`,{
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({eventId, userId, impactScore})
+        });
+        const result = await res.json();
+        console.log("event completed successfuly", result);
+        return result;
+        
+    }catch(err){
+        console.error("error in event complete",err);
+        
+    }
+}
+
+//Volunteer profile
+export const getVolunteerProfile = async (userId: String) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return { redirect: true };
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/events/volunteer/profile/${userId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const result = await res.json();
+        console.log("Volunteer profile:", result);
+        return result;
+
+    } catch (err) {
+        console.error("Error fetching volunteer profile:", err);
+        return { error: true };
+    }
+};
+
+
 
 
 
