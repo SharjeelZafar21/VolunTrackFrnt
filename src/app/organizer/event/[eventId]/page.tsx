@@ -61,7 +61,7 @@ console.log("my requests",requests);
         .map((r: any) => (
           <div key={r._id} className="p-3 border mt-2 flex justify-between">
             <span
-            className="font-medium text-blue-600 underline cursor-pointer"
+            className="font-medium cursor-pointer"
             onClick={() => router.push(`/organizer/volunteerProfile/${r.userId._id}?requestId=${r._id}`)}
             >
                 {r.userId.name}

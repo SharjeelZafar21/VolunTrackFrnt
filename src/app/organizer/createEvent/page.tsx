@@ -12,6 +12,12 @@ export default function CreateEvent() {
     const [location, setLocation] = useState("");
     const [date, setDate] = useState("");
     const [skills, setSkills] = useState("");
+    const [toast, setToast] = useState<{ type: string; message: string } | null>(null);
+
+    const showToast = (type: string, message: string) => {
+      setToast({ type, message });
+      setTimeout(() => setToast(null), 2500);
+    };
 
     const handleSubmit = async (e: any) =>{
         e.preventDefault();
@@ -31,12 +37,14 @@ export default function CreateEvent() {
         }
 
         const res = await createEvent(data, token);
+        console.log("res in event create",res);
+        
 
-        if(res?.event) {
-            router.push("/organizer/dashboard");
-            alert("Event Created!");
+        if(res?.events) {
+            showToast("success","Event Created!");
+            setTimeout(() => router.push("/organizer/dashboard"), 2000);
         }else {
-            alert(res.message || "Failed to create event");
+            showToast("error",res.message || "Failed to create event");
         }
     };
     return(
@@ -94,6 +102,16 @@ export default function CreateEvent() {
 
 
             </form>
+            {toast && (
+            <div
+                className={`fixed bottom-6 right-6 px-4 py-3 rounded shadow-lg text-white 
+                ${
+                toast.type === "success" ? "bg-green-600" : "bg-red-600"
+                } transition`}
+            >
+                {toast.message}
+            </div>
+        )}
         </div>
 
         </>

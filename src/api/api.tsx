@@ -236,7 +236,7 @@ export const completeEvent = async (eventId: String, userId: String, impactScore
     }
 }
 
-//Volunteer profile
+//Volunteer profile for organization
 export const getVolunteerProfile = async (userId: String) => {
     const token = localStorage.getItem("token");
 
@@ -260,6 +260,29 @@ export const getVolunteerProfile = async (userId: String) => {
         return { error: true };
     }
 };
+
+//Volunteer My Profile
+export const getVolunteerMyProfile = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) return { redirect: true };
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/events/volunteer/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.error("Error fetching volunteer my profile:", err);
+    return { error: true };
+  }
+};
+
 
 
 
